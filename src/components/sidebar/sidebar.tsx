@@ -10,9 +10,8 @@ interface SidebarProps {
 const Sidebar: FunctionComponent<SidebarProps> = () => {
     return <StyledSidebar>
         <ul>{['tBTCUSD', 'tETHUSD', 'tBTCUST'].map((tickerLabel) => {
-            return <li>
-                <NavLink key={tickerLabel}
-                         activeClassName='active'
+            return <li key={tickerLabel}>
+                <NavLink activeClassName='active'
                          to={routesById.ticker.path.replace(':label', tickerLabel)}>
                     {tickerLabel}
                 </NavLink></li>

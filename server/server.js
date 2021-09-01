@@ -10,9 +10,8 @@ const url = 'https://api-pub.bitfinex.com/v2/'
 
 async function request(pathParams) {
   try {
-    return await axios.get(`${url}/${pathParams}?${queryParams}`)
-  }
-  catch (err) {
+    return await axios.get(`${url}/${pathParams}`)
+  } catch (err) {
     console.log(err)
   }
 }
@@ -24,10 +23,10 @@ app.use(
   })
 );
 
-app.get('*', async function(req,res,next) {
+app.get('*', async function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  const { data } = await request(req.path);
+  const {data} = await request(req.path);
   res.status(200);
   return res.send(data);
 });

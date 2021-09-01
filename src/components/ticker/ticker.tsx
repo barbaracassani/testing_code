@@ -1,6 +1,6 @@
 import React, {FunctionComponent, useEffect, useRef} from 'react';
-import {useGetTickerByLabelQuery} from './ticker.service';
-import {RouteComponentProps} from 'react-router-dom';
+import {StateType, useGetTickerByLabelQuery} from './ticker.service';
+import {RouteComponentProps, useParams} from 'react-router-dom';
 import {StyledError, StyledTicker, StyledTickerGroup, StyledTickerSingle} from './ticker.styled';
 
 
@@ -9,7 +9,7 @@ interface TickerProps extends RouteComponentProps<Record<string, string>, {}> {
 
 const Ticker: FunctionComponent<TickerProps> = (props) => {
 
-    const label: string = props.match.params.label;
+    const params = useParams() as { label: string }
 
     const [pollingInterval, setPollingInterval] = React.useState(3000);
     const [bidClass, setBidClass] = React.useState('');
@@ -19,32 +19,23 @@ const Ticker: FunctionComponent<TickerProps> = (props) => {
         data,
         error,
         isLoading,
-    } = useGetTickerByLabelQuery(label, {
+    } = useGetTickerByLabelQuery(params.label, {
         pollingInterval
     })
-
-    const currentValues = useRef({bid: data?.bid || 0, ask: data?.ask || 0});
+    const currentValues = useRef({bid: data?.bid || 0, ask: data?.ask || 0} as StateType);
 
     useEffect(() => {
         let timeout: number | undefined;
         if (data) {
-            const {bid, ask} = data
-            if (currentValues.current.bid && currentValues.current.ask) {
-                if (bid) {
-                    if (bid > currentValues.current.bid) {
-                        setBidClass('up')
-                    } else if (bid < currentValues.current.bid) {
-                        setBidClass('down')
+            ['bid', 'ask'].forEach((s) => {
+                if (currentValues.current[s] && data[s]) {
+                    if (data[s] > currentValues.current[s]) {
+                        s === 'bid' ? setBidClass('up') : setAskClass('up')
+                    } else if (data[s] < currentValues.current[s]) {
+                        s === 'bid' ? setBidClass('down') : setAskClass('down')
                     }
                 }
-                if (ask) {
-                    if (ask > currentValues.current.ask) {
-                        setBidClass('up')
-                    } else if (ask < currentValues.current.ask) {
-                        setBidClass('down')
-                    }
-                }
-            }
+            })
             currentValues.current = data;
             timeout = window.setTimeout(() => {
                 setBidClass('')
@@ -60,7 +51,7 @@ const Ticker: FunctionComponent<TickerProps> = (props) => {
         setBidClass('')
         setAskClass('')
         currentValues.current = {bid: 0, ask: 0};
-    }, [label])
+    }, [params.label])
 
     useEffect(() => {
         // suspend polling on unmount. Possibly unnecessary -- no mention in the redux-toolkit docs
@@ -68,7 +59,7 @@ const Ticker: FunctionComponent<TickerProps> = (props) => {
     }, [])
 
     return <StyledTicker>
-        <h2>{label}</h2>
+        <h2>{params.label}</h2>
         {error && <StyledError>Cannot load data!</StyledError>}
         {!error && isLoading ? <div>Loading...</div> :
             <StyledTickerGroup>

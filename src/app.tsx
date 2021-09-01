@@ -14,7 +14,7 @@ function App() {
                 <StyledContainer>
                     <StyledTopRow>
                         <Col xs={12} sm={12} md={12} lg={12}>
-                            <h1>Your favourite currencies</h1>
+                            <h1>Ticker</h1>
                         </Col>
                     </StyledTopRow>
                     <Row>

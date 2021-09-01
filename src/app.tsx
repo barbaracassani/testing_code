@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import {Col, Container, Row} from 'react-awesome-styled-grid';
+import {Col, Row} from 'react-awesome-styled-grid';
 
 import {routes} from './routes';
 import Sidebar from './components/sidebar/sidebar';
@@ -18,10 +18,10 @@ function App() {
                         </Col>
                     </StyledTopRow>
                     <Row>
-                        <StyledLeftCol xs={2} sm={6} md={2} lg={6}>
+                        <StyledLeftCol xs={4} sm={4} md={2} lg={4}>
                             <Sidebar/>
                         </StyledLeftCol>
-                        <Col xs={2} sm={2} md={6} lg={6}>
+                        <Col xs={4} sm={4} md={6} lg={8}>
                             <Switch>
                                 {routes.map(({Component, path, exact}, i) => {
                                     return <Route

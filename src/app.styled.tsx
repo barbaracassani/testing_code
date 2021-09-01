@@ -6,8 +6,8 @@ export const colours = {
     light: '#f5f5f5',
     medium: '#dde0e0',
     highlight: '#FF0508',
-    down: '#6cad26',
-    up: '#4d910c',
+    go_down: '#FF0508',
+    go_up: '#4d910c',
     accents: '#a5c8e5'
 };
 
